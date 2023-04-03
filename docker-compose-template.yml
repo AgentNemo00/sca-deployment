@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  {{.ServiceName}}:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        "PRVT_KEY": "{{.PrivateKeyPath}}"
+        "MAIN_PATH": "{{.MainPath}}"
+    ports:
+      - "10001:10001"
+    networks:
+      - default
+    restart: always
+    {{if .Database}}environment:
+      "APP_DATABASE": "postgres://postgres:example@database:5432/postgres?sslmode=disable"
+    depends_on:
+      - database
+    command: sh -c "sleep 5s && /root/app"{{end}}
+  {{if .Database}}database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      PGDATA: /data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - default
+  {{end}}
