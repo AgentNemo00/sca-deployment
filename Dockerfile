@@ -13,7 +13,7 @@ RUN chmod 700 /root/.ssh/id_rsa
 RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 RUN git config --global url.ssh://git@github.com/.insteadOf https://github.com/
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o app $MAIN_PATH
+RUN CGO_ENABLED=1 GOOS=linux go build -o app -a -ldflags '-linkmode external -extldflags "-static"' $MAIN_PATH
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
