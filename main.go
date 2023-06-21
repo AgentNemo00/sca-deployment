@@ -19,12 +19,17 @@ type Vars struct {
 }
 
 func main() {
+	onlyDocker := flag.Bool("docker", false, "only docker")
 	templateName := flag.String("template", "docker-compose-template.yml", "path to template")
 	serviceName := flag.String("service", "service", "service name and container name")
 	mainPath := flag.String("main", "main.go", "path to the main.go")
 	privateKeyPath := flag.String("key", "./id_rsa", "path to the private key to use to download private dependencies")
 	databaseEnabled := flag.Bool("database", false, "enable database service")
 	flag.Parse()
+	if *onlyDocker {
+		createDockerFile()
+		return
+	}
 	dockerComposeTemplate, err := template.ParseFS(templates.Docker(), fmt.Sprintf("**/%s", *templateName))
 	if err != nil {
 		log.Fatal(err)
@@ -43,6 +48,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	createDockerFile()
+}
+
+func createDockerFile() {
 	dockerFileTemplate, err := templates.Docker().ReadFile("docker/Dockerfile")
 	if err != nil {
 		log.Fatal(err)
