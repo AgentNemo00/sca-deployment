@@ -24,6 +24,7 @@ func main() {
 	mainPath := flag.String("main", "main.go", "path to the main.go")
 	privateKeyPath := flag.String("key", "./id_rsa", "path to the private key to use to download private dependencies")
 	databaseEnabled := flag.Bool("database", false, "enable database service")
+	flag.Parse()
 	dockerComposeTemplate, err := template.ParseFS(templates.Docker(), fmt.Sprintf("**/%s", *templateName))
 	if err != nil {
 		log.Fatal(err)
