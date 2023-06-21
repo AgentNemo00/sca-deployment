@@ -5,7 +5,7 @@ ARG MAIN_PATH
 
 WORKDIR /root
 
-COPY . .
+COPY ../.. .
 
 RUN mkdir -p /root/.ssh
 COPY $PRVT_KEY /root/.ssh/id_rsa
