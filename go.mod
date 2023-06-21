@@ -1,3 +1,3 @@
-module github.com/AgentNemo00/deployment
+module github.com/AgentNemo00/sca-deployment
 
 go 1.20
