@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/AgentNemo00/deployment/templates"
+	"github.com/AgentNemo00/sca-deployment/templates"
 	"io"
 	"log"
 	"os"
