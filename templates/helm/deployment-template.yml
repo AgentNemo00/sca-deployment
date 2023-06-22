@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Name}}
+spec:
+  replicas: {{.Replicas}}
+  selector:
+    matchLabels:
+      app: {{.Name}}
+  template:
+    metadata:
+      labels:
+        app: {{.Name}}
+    spec:
+      containers:
+        - name: {{.Name}}-container
+          image: {{.Image}}
+          imagePullPolicy: {{if .Local}}Never{{else}}Always{{end}}
+          ports:
+            - containerPort: {{.Port}}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{.Port}}
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: {{.Port}}
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 1

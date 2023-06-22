@@ -21,8 +21,8 @@ type Vars struct {
 
 func main() {
 	onlyDocker := flag.Bool("docker", false, "only docker")
-	templateName := flag.String("template", "docker-compose-template.yml", "path to template")
-	serviceName := flag.String("service", "service", "service name and container name")
+	templateName := flag.String("template", "docker-compose-template.yml", "template name")
+	name := flag.String("name", "service", "service and container name")
 	mainPath := flag.String("main", "main.go", "path to the main.go")
 	privateKeyPath := flag.String("key", "./id_rsa", "path to the private key to use to download private dependencies")
 	databaseEnabled := flag.Bool("database", false, "enable database service")
@@ -44,7 +44,7 @@ func main() {
 	err = dockerComposeTemplate.Execute(dockerComposeFile, Vars{
 		PrivateKeyPath: *privateKeyPath,
 		MainPath:       *mainPath,
-		ServiceName:    *serviceName,
+		ServiceName:    *name,
 		Database:       *databaseEnabled,
 		EnvFile:        *envFile,
 	})
