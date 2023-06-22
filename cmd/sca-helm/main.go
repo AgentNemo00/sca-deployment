@@ -10,15 +10,17 @@ import (
 )
 
 type Vars struct {
-	Name     string
-	Replicas int
-	Image    string
-	Port     int
-	Local    bool
+	Name      string
+	Namespace string
+	Replicas  int
+	Image     string
+	Port      int
+	Local     bool
 }
 
 func main() {
 	name := flag.String("name", "service", "service and container name")
+	namespace := flag.String("namespace", "default", "namespace name")
 	templateName := flag.String("template", "deployment-template.yml", "template name")
 	replicas := flag.Int("replicas", 1, "amount of replicas")
 	image := flag.String("image", "", "image to use")
@@ -38,11 +40,12 @@ func main() {
 	}
 	defer helmFile.Close()
 	err = helmTemplate.Execute(helmFile, Vars{
-		Name:     *name,
-		Replicas: *replicas,
-		Image:    *image,
-		Port:     *port,
-		Local:    *local,
+		Name:      *name,
+		Namespace: *namespace,
+		Replicas:  *replicas,
+		Image:     *image,
+		Port:      *port,
+		Local:     *local,
 	})
 	if err != nil {
 		log.Fatal(err)
