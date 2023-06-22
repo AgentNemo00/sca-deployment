@@ -15,6 +15,7 @@ type Vars struct {
 	PrivateKeyPath string
 	MainPath       string
 	ServiceName    string
+	EnvFile        string
 	Database       bool
 }
 
@@ -25,6 +26,7 @@ func main() {
 	mainPath := flag.String("main", "main.go", "path to the main.go")
 	privateKeyPath := flag.String("key", "./id_rsa", "path to the private key to use to download private dependencies")
 	databaseEnabled := flag.Bool("database", false, "enable database service")
+	envFile := flag.String("env", "", "path to env file")
 	flag.Parse()
 	if *onlyDocker {
 		createDockerFile()
@@ -44,6 +46,7 @@ func main() {
 		MainPath:       *mainPath,
 		ServiceName:    *serviceName,
 		Database:       *databaseEnabled,
+		EnvFile:        *envFile,
 	})
 	if err != nil {
 		log.Fatal(err)

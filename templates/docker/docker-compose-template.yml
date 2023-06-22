@@ -13,6 +13,7 @@ services:
     networks:
       - default
     restart: always
+    {{if .EnvFile}}env_file: {{.EnvFile}}{{end}}
     {{if .Database}}environment:
       "APP_DATABASE": "postgres://postgres:example@database:5432/postgres?sslmode=disable"
     depends_on:
