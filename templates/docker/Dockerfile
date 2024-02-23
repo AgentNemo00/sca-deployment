@@ -12,8 +12,11 @@ COPY $PRVT_KEY /root/.ssh/id_rsa
 RUN chmod 700 /root/.ssh/id_rsa
 RUN echo "Host github.com\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config
 RUN git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+RUN go mod download
 
 RUN CGO_ENABLED=1 GOOS=linux go build -o app -a -ldflags '-linkmode external -extldflags "-static"' $MAIN_PATH
+
+RUN rm /root/.ssh./id_rsa
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
