@@ -16,7 +16,7 @@ RUN go mod download
 
 RUN CGO_ENABLED=1 GOOS=linux go build -o app -a -ldflags '-linkmode external -extldflags "-static"' $MAIN_PATH
 
-RUN rm /root/.ssh./id_rsa
+RUN rm -R /root/.ssh
 
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
