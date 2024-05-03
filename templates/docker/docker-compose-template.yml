@@ -14,8 +14,11 @@ services:
       - default
     restart: always
     {{if .EnvFile}}env_file: {{.EnvFile}}{{end}}
-    {{if .Database}}environment:
-      "APP_DATABASE": "postgres://postgres:example@database:5432/postgres?sslmode=disable"
+    environment:
+      "APP_CONTAINERIZATION": true
+      "APP_PING": true
+      "APP_METRICS": true
+    {{if .Database}}  "APP_DATABASE": "postgres://postgres:example@database:5432/postgres?sslmode=disable"
     depends_on:
       - database
     command: sh -c "sleep 5s && /root/app"{{end}}
@@ -44,6 +47,17 @@ services:
       PGDATA: /data/postgres
     ports:
       - "5432:5432"
+    networks:
+      - default
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on:
+      - database
+    ports:
+      - "5555:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
     networks:
       - default
   {{end}}
