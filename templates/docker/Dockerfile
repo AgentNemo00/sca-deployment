@@ -19,9 +19,32 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o app -a -ldflags '-linkmode external -ex
 RUN rm -R /root/.ssh
 
 FROM alpine:latest
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates doas
 
 ENV APP_CONTAINERIZATION=true
+ENV USER=docker
+ENV GROUPNAME=$USER
+ENV UID=12345
+ENV GID=23456
 
-COPY --from=builder /root/app /root/app
-CMD ["/root/app"]
+RUN addgroup \
+    --gid "$GID" \
+    "$GROUPNAME" \
+&&  adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/home/docker" \
+    --ingroup "$GROUPNAME" \
+    --no-create-home \
+    --uid "$UID" \
+    $USER
+
+RUN echo 'permit nopass docker as root cmd /home/docker/app' > /etc/doas.d/doas.conf
+RUN doas -C /etc/doas.d/doas.conf && echo "config ok" || exit 1
+
+COPY --from=builder /root/app /home/docker/app
+RUN chown -R docker:docker /home/docker
+
+USER $USER
+
+CMD ["/bin/sh"]
